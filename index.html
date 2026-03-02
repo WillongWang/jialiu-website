@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jia Liu | Associate Professor, HKUST</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent: #0066cc;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .card-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Photo Carousel */
+        .photo-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .photo-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            scroll-snap-align: center;
+            overflow: hidden;
+        }
+
+        .carousel-slide img {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 70%;
+            height: 100%;
+            object-fit: cover;
+            mask-image: linear-gradient(to right, transparent, black 20%);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 20%);
+        }
+
+        .slide-caption {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            width: 40%;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.2;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 40px;
+            transform: none;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        /* Dynamic Island Navbar */
+        .navbar-container {
+            position: fixed;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .dynamic-island {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            padding: 12px 24px;
+            border-radius: 100px;
+            display: flex;
+            gap: 24px;
+            pointer-events: auto;
+            transition: all 0.4s var(--ease-apple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dynamic-island a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .dynamic-island a:hover {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 110px 20px 20px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            background: linear-gradient(180deg, #1d1d1f 0%, #424245 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--ease-apple) forwards;
+        }
+
+        .hero p {
+            font-size: clamp(16px, 2.5vw, 19px);
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s var(--ease-apple) 0.2s forwards;
+        }
+
+        .profile-container {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transform: scale(0.9);
+            animation: scaleIn 1s var(--ease-apple) 0.4s forwards;
+            transition: transform 0.5s var(--ease-apple);
+        }
+
+        .profile-container:hover {
+            transform: scale(1.05) !important;
+        }
+
+        .profile-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Bento Grid Layout */
+        .section-title {
+            font-size: 48px;
+            font-weight: 700;
+            text-align: center;
+            margin: 100px 0 40px;
+            letter-spacing: -0.02em;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(300px, auto);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .bento-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            z-index: 2;
+        }
+
+        .span-12 { grid-column: span 12; }
+        .span-8  { grid-column: span 8; }
+        .span-6  { grid-column: span 6; }
+        .span-4  { grid-column: span 4; }
+
+        @media (max-width: 900px) {
+            .span-8, .span-6, .span-4 { grid-column: span 12; }
+        }
+
+        .card-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .card-desc {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .card-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .card-dark {
+            background: #1d1d1f;
+            color: #f5f5f7;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-dark .card-label,
+        .card-dark .card-desc { color: #86868b; }
+        .card-dark .card-title { color: #fff; }
+
+        /* Bio card full width */
+        .bio-card {
+            grid-column: span 12;
+            min-height: unset;
+        }
+
+        .bio-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .bio-section-label {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+
+        /* Missing placeholder */
+        .missing-notice {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,200,0,0.06),
+                rgba(255,200,0,0.06) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            border: 2px dashed rgba(200,160,0,0.4);
+            border-radius: 16px;
+            padding: 20px 24px;
+            color: #a07800;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .missing-notice::before {
+            content: "⚠️";
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Research List */
+        .research-list {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .paper-item {
+            border-bottom: 1px solid #e5e5e5;
+            padding: 32px 0;
+            transition: opacity 0.3s;
+        }
+
+        .paper-item:hover { opacity: 0.8; }
+
+        .paper-meta {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .paper-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .paper-authors {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .paper-links a {
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        /* News Timeline */
+        .news-list {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 24px;
+            padding: 20px 0;
+            border-left: 2px solid #e5e5e5;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .news-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 28px;
+            width: 10px;
+            height: 10px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+        }
+
+        .news-date {
+            min-width: 120px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 14px;
+            padding-top: 4px;
+        }
+
+        .news-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Team Grid */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .team-card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s;
+        }
+
+        .team-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .team-role {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: #fff;
+            padding: 60px 24px;
+            margin-top: 120px;
+            border-top: 1px solid #e5e5e5;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Background Blobs */
+        .background-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(0, 102, 204, 0.2) 0%, rgba(0, 102, 204, 0) 70%);
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(150, 50, 255, 0.15) 0%, rgba(150, 50, 255, 0) 70%);
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            top: 40%;
+            left: 40%;
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, rgba(50, 200, 255, 0.15) 0%, rgba(50, 200, 255, 0) 70%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33%       { transform: translate(30px, -50px) scale(1.1); }
+            66%       { transform: translate(-20px, 20px) scale(0.9); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar-container">
+        <nav class="dynamic-island">
+            <a href="#about">About</a>
+            <a href="#research">Research</a>
+            <a href="#news">News</a>
+            <a href="#opportunities">Join Us</a>
+            <a href="#team">Team</a>
+            <a href="https://willongwang.github.io/Liu-s-lab/" target="_blank">DataIntel Lab</a>
+        </nav>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <!-- [待补充] 请将个人照片命名为 profile.jpg 放入本目录，替换下方 src -->
+        <div class="profile-container">
+            <img src="profile.jpg" alt="Jia Liu"
+                 onerror="this.style.background='linear-gradient(135deg,#e0f2fe,#bfdbfe)';this.style.display='flex';this.removeAttribute('src');">
+        </div>
+        <h1>Jia Liu 劉佳</h1>
+        <p>
+            Associate Professor of Marketing &amp; affiliated Associate Professor in IEDA,<br>
+            <a href="https://www.hkust.edu.hk/">Hong Kong University of Science and Technology (HKUST)</a>.<br>
+            Research Fellow, Cambridge Centre for Chinese Management · Lee Heng Fellow · NSFC Excellent Young Scientist · MSI Young Scholar.
+        </p>
+
+        <div style="margin-top: 30px; opacity: 0; animation: fadeUp 1s var(--ease-apple) 0.6s forwards; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="mailto:jialiu@ust.hk" style="color: var(--text-primary); font-weight: 500;">Email</a>
+            <span style="color: var(--text-secondary);">•</span>
+            <a href="http://jialiu.people.ust.hk/JiaLiu_CV.pdf" style="color: var(--text-primary); font-weight: 500;">CV</a>
+            <span style="color: var(--text-secondary);">•</span>
+            <a href="https://scholar.google.com/citations?user=25p7qyQAAAAJ&hl=en" style="color: var(--text-secondary); font-weight: 500; cursor: default;" title="Google Scholar 链接">Google Scholar</a>
+            <span style="color: var(--text-secondary);">•</span>
+            <!-- [待补充] 如有 LinkedIn，替换下方链接 -->
+            <a href="#" style="color: var(--text-secondary); font-weight: 500; cursor: default;" title="[待补充] LinkedIn 链接">LinkedIn</a>
+        </div>
+    </section>
+
+    <!-- About / Bio (hyang.org 无此板块，此处对应 jialiu 的核心内容) -->
+    <h2 class="section-title" id="about">About</h2>
+    <div class="bento-grid">
+        <div class="bento-card bio-card" data-aos="fade-up">
+            <div class="card-label">English Bio</div>
+            <p class="bio-text">
+                Jia Liu is currently an Associate Professor of Marketing and an affiliated Associate Professor in the
+                Department of Industrial Engineering and Decision Analytics (IEDA), Hong Kong University of Science and
+                Technology (HKUST). She is a Research Fellow at the Cambridge Centre for Chinese Management, a Lee Heng
+                Fellow, a recipient of the Excellent Young Scientist Fund from the National Natural Science Foundation of
+                China (NSFC), and a Marketing Science Institute (MSI) Young Scholar. Dr. Liu serves on the editorial
+                boards of three leading international journals—Journal of Marketing Research, Marketing Science, and
+                Journal of Consumer Research—and has received multiple service awards.
+            </p>
+            <p class="bio-text">
+                Her research spans consumer behavior modeling, big data analytics, recommendation systems, revenue management, global branding, and
+                the application of generative artificial intelligence (AIGC) in business, with a strong focus on
+                integrating marketing science and AI. Her work has been published in top-tier journals such as Marketing
+                Science, Management Science, Journal of Marketing Research, and Journal of Marketing. She has received
+                prestigious honors including the John Little Award (INFORMS Best Marketing Paper), the Frank M. Bass
+                Outstanding Paper Award nomination, and several best paper awards at international conferences. Dr. Liu
+                has led and participated in research projects funded by NSFC and the Hong Kong Research Grants Council
+                (RGC), securing multi-million HKD grants. Her research not only advances theoretical innovation but also
+                provides empirical insights and practical guidance for strategic decision-making in the era of
+                globalization and digital transformation.
+            </p>
+            <p class="bio-text">
+                In industry practice, Dr. Liu has held research positions at
+                Meta and Microsoft Research and currently serves as a business advisor to the International Digital
+                Economy Academy at Shenzhen, actively promoting the integration of academic research and industry
+                applications. She collaborates with global enterprises to develop AI-driven marketing strategies and
+                data-based decision tools, helping businesses achieve competitive advantages in the digital and
+                intelligent era. Dr. Liu holds a Ph.D. in Marketing from Columbia University, an M.S. in Statistics
+                from Michigan State University, and a B.S. in Mathematics from Tianjin University.
+            </p>
+
+            <div class="card-label">中文简介</div>
+            <p class="bio-text">
+                刘佳博士现任香港科技大学（HKUST）商学院市场营销学副教授，并兼任工程学院工业工程与决策分析系副教授。她是剑桥大学中国管理中心研究员（Research
+                Fellow）、利兴聚贤学人（Lee Heng Fellow）、国家自然科学基金优秀青年科学基金（优青）获得者，以及美国市场科学研究院（Marketing Science
+                Institute, MSI）青年学者。刘博士现担任《Journal of Marketing Research》《Marketing Science》《Journal of Consumer
+                Research》三大顶级期刊的编审委员，并多次获得期刊服务奖。
+            </p>
+            <p class="bio-text">
+                她的研究横跨消费者行为建模、大数据分析、推荐系统、收入管理、品牌国际化，以及生成式人工智能（AIGC）在商业中的应用，致力于推动营销科学与人工智能的深度融合。她的学术成果发表于《Marketing
+                Science》《Management Science》《Journal of Marketing Research》《Journal of Marketing》等国际顶级期刊，曾荣获 John
+                Little 奖（INFORMS最佳营销论文奖）、Frank M. Bass
+                杰出论文提名奖，以及多项国际会议最佳论文奖。刘博士主持和参与的科研项目获得包括国家自然科学基金（NSFC）、香港研究资助局（RGC）在内的数千万港币资助。她的工作不仅推动理论创新，也为企业在全球化和数字化背景下的战略决策提供实证支持和实践指南。
+            </p>
+            <p class="bio-text">
+                在产业实践方面，刘博士曾在
+                Meta 和微软研究院担任研究职位，现任粤港澳大湾区数字经济研究院商业顾问，积极推动学术研究与产业应用的结合。她与多家国际企业合作，开发基于AI的营销策略和数据驱动决策工具，帮助企业在数字化和智能化时代实现竞争优势。刘博士拥有哥伦比亚大学市场营销博士学位、密歇根州立大学统计学硕士学位，以及天津大学数学学士学位。
+            </p>
+
+            <div style="margin-top: 8px; font-size: 14px; color: var(--text-secondary);">
+                📍 LSK4051, HKUST, Clear Water Bay, Hong Kong &nbsp;·&nbsp;
+                📞 +852 2358-7709 &nbsp;·&nbsp;
+                ✉️ <a href="mailto:jialiu@ust.hk">jialiu@ust.hk</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Highlights -->
+    <!-- [待补充] Highlights 图片轮播区域：原网站无公开图片资源，需补充照片后启用 -->
+    <h2 class="section-title" id="highlights">Highlights</h2>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+        <div class="missing-notice" data-aos="fade-up">
+            <span>
+                <strong>[待补充]</strong> 此区域对应 Highlights 图片轮播。原网站未公开相关照片，请在 <code>index.html</code> 的
+                <code>&lt;!-- HIGHLIGHTS CAROUSEL --&gt;</code> 注释处添加图片并取消注释以启用。
+                图片文件命名建议：<code>highlight_1.jpg</code>、<code>highlight_2.jpg</code>…
+            </span>
+        </div>
+    </div>
+
+    <!-- HIGHLIGHTS CAROUSEL（待补充：取消下方注释并替换图片路径及说明文字）
+    <div class="bento-grid" style="margin-top: 24px;">
+        <div class="bento-card span-12" style="padding: 0; height: 400px; background: #000;" data-aos="fade-up">
+            <div class="photo-carousel" id="carousel">
+                <div class="carousel-slide">
+                    <div class="slide-caption">在此填写第一张图片说明</div>
+                    <img src="highlight_1.jpg" alt="Highlight 1">
+                </div>
+                <div class="carousel-slide">
+                    <div class="slide-caption">在此填写第二张图片说明</div>
+                    <img src="highlight_2.jpg" alt="Highlight 2">
+                </div>
+            </div>
+            <div class="carousel-dots" id="dots">
+                <div class="dot active" onclick="scrollToSlide(0)"></div>
+                <div class="dot" onclick="scrollToSlide(1)"></div>
+            </div>
+        </div>
+    </div>
+    END HIGHLIGHTS CAROUSEL -->
+
+    <!-- Grants & Teaching -->
+    <div class="bento-grid" style="margin-top: 40px;">
+        <!-- Grants: 仅从 Bio 提取到的信息，具体列表待补充 -->
+        <div class="bento-card span-6" style="background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);" data-aos="fade-up">
+            <div class="card-label" style="color: #0369a1;">Funding</div>
+            <div class="card-title" style="color: #0c4a6e;">Major Grants</div>
+            <div class="card-desc" style="color: #0369a1;">
+                • National Natural Science Foundation of China (NSFC) — Excellent Young Scientist Fund (优青)<br>
+                • Hong Kong Research Grants Council (RGC) grants<br>
+                <br>
+                <!-- [待补充] 如有具体基金项目列表，请在此处逐条补充 -->
+                <em style="font-size: 13px; color: #64a0c8;">[待补充] 如有更多具体项目信息，请在此处补充</em>
+            </div>
+        </div>
+
+        <!-- Teaching: 原网站无教学信息 -->
+        <div class="bento-card span-6" style="background: #fff;" data-aos="fade-up">
+            <div class="card-label">Teaching</div>
+            <div class="card-title" style="font-size: 24px; color: var(--text-secondary);">[待补充]</div>
+            <div class="missing-notice" style="margin-top: 8px;">
+                原网站未列出教学课程信息，请补充课程名称及大纲链接。
+            </div>
+        </div>
+    </div>
+
+    <!-- Research / Publications -->
+    <!-- [待补充] 论文列表：原网站未列出具体论文，请参照下方模板逐条补充 -->
+    <h2 class="section-title" id="research">Selected Research</h2>
+    <div class="research-list">
+        <div class="missing-notice" data-aos="fade-up" style="margin-bottom: 32px;">
+            <span>
+                <strong>[待补充]</strong> 原网站未列出论文列表。请参照下方模板（已注释）逐条添加。
+                发表期刊包括 Marketing Science、Management Science、Journal of Marketing Research、Journal of Marketing 等。
+            </span>
+        </div>
+
+        <!-- 论文模板（取消注释并填写真实数据）：
+        <div class="paper-item" data-aos="fade-up">
+            <div class="paper-meta">期刊/会议名称 年份</div>
+            <div class="paper-title">论文标题</div>
+            <div class="paper-authors">作者列表（Jia Liu 加粗）</div>
+            <div class="paper-links">
+                <a href="#">Paper</a>
+                <a href="#">SSRN</a>
+            </div>
+        </div>
+        -->
+
+        <!-- 荣誉（从 Bio 提取） -->
+        <div class="paper-item" data-aos="fade-up">
+            <div class="paper-meta">Award</div>
+            <div class="paper-title">John Little Award — INFORMS Best Marketing Paper</div>
+            <div class="paper-authors">Jia Liu</div>
+        </div>
+
+        <div class="paper-item" data-aos="fade-up">
+            <div class="paper-meta">Award Nomination</div>
+            <div class="paper-title">Frank M. Bass Outstanding Paper Award Nomination</div>
+            <div class="paper-authors">Jia Liu</div>
+        </div>
+    </div>
+
+    <!-- News -->
+    <!-- [待补充] 新闻动态：原网站无此板块，请逐条添加 -->
+    <h2 class="section-title" id="news">Latest News</h2>
+    <div class="news-list">
+        <div class="missing-notice" data-aos="fade-up" style="margin-bottom: 32px;">
+            <span>
+                <strong>[待补充]</strong> 原网站未列出最新动态。请参照下方模板逐条添加新闻条目。
+            </span>
+        </div>
+
+        <!-- 新闻模板（取消注释并填写真实内容）：
+        <div class="news-item" data-aos="fade-up">
+            <div class="news-date">Month Year</div>
+            <div class="news-content">新闻内容，可包含 <strong>加粗</strong> 和 <a href="#">链接</a>。</div>
+        </div>
+        -->
+    </div>
+
+    <!-- Opportunities -->
+    <h2 class="section-title" id="opportunities">Opportunities</h2>
+    <div style="max-width: 1200px; margin: 0 auto 24px; padding: 0 24px;" data-aos="fade-up">
+        <div style="display: inline-block; background: #1d1d1f; color: #f5f5f7; border-radius: 12px; padding: 14px 24px;">
+            <span style="font-size: 15px; color: #86868b; line-height: 1.7;">
+                I am currently recruiting Postdoc, PhD students, and RAs. Please send me your CV and transcripts if
+                interested. &nbsp;·&nbsp; <a href="mailto:jialiu@ust.hk" style="color: #2997ff;">jialiu@ust.hk</a>
+            </span>
+        </div>
+    </div>
+    <div class="bento-grid">
+        <div class="bento-card span-4" style="background: #fff;" data-aos="fade-up">
+            <div class="card-label">Postdoc</div>
+            <div class="card-title">Join the Group</div>
+            <div class="card-desc">
+                The candidates have research papers on AI agents, LLMs, or diffusion models; interested in algorithm
+                design or data visualization for business applications.
+            </div>
+            <a href="mailto:jialiu@ust.hk" class="card-link">Apply &rarr;</a>
+        </div>
+        <div class="bento-card span-4" style="background: #fff;" data-aos="fade-up">
+            <div class="card-label">PhD Students</div>
+            <div class="card-title">Ph.D. in IEDA</div>
+            <div class="card-desc">
+                The candidates must be familiar with the foundation of operation research and its applications in supply
+                chains, and have experience in big data (e.g., network) analytics.
+            </div>
+            <a href="mailto:jialiu@ust.hk" class="card-link">Apply &rarr;</a>
+        </div>
+        <div class="bento-card span-4" style="background: #fff;" data-aos="fade-up">
+            <div class="card-label">RA</div>
+            <div class="card-title">Research Assistant</div>
+            <div class="card-desc">
+                The candidates must be familiar with LLMs and/or diffusion models, frontend/backend/database for
+                platform design.
+            </div>
+            <a href="mailto:jialiu@ust.hk" class="card-link">Apply &rarr;</a>
+        </div>
+    </div>
+
+    <!-- Team -->
+    <!-- [待补充] 团队成员：原网站未列出学生/团队信息 -->
+    <h2 class="section-title" id="team">The Group</h2>
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+        <div class="missing-notice" data-aos="fade-up">
+            <span>
+                <strong>[待补充]</strong> 原网站未列出团队成员。请参照下方模板在 <code>index.html</code>
+                的 <code>&lt;!-- TEAM --&gt;</code> 注释处补充当前学生及校友信息。
+            </span>
+        </div>
+    </div>
+
+    <!-- TEAM（取消下方注释并填写成员信息）
+    <h3 style="text-align: center; margin: 40px 0 30px; color: var(--text-secondary);">Current Students</h3>
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-name">学生姓名</div>
+            <div class="team-role">所在院校</div>
+        </div>
+    </div>
+
+    <h3 style="text-align: center; margin: 60px 0 30px; color: var(--text-secondary);">Alumni & Visitors</h3>
+    <div class="team-grid">
+        <div class="team-card">
+            <div class="team-name">校友姓名</div>
+            <div class="team-role">所在院校</div>
+        </div>
+    </div>
+    END TEAM -->
+
+    <footer>
+        &copy; 2026 Jia Liu. All rights reserved.<br>
+        LSK4051, HKUST, Clear Water Bay, Hong Kong
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+            offset: 50
+        });
+
+        // Carousel logic (activated when HIGHLIGHTS CAROUSEL section is uncommented)
+        function scrollToSlide(index) {
+            const carousel = document.getElementById('carousel');
+            if (!carousel) return;
+            const width = carousel.offsetWidth;
+            carousel.scrollTo({ left: width * index, behavior: 'smooth' });
+        }
+
+        const carousel = document.getElementById('carousel');
+        if (carousel) {
+            const dots = document.getElementById('dots').children;
+            carousel.addEventListener('scroll', () => {
+                const index = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+                for (let d of dots) d.classList.remove('active');
+                if (dots[index]) dots[index].classList.add('active');
+            });
+            setInterval(() => {
+                const currentIndex = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+                scrollToSlide((currentIndex + 1) % dots.length);
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>
